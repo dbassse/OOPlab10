@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes>
+  <route>
+    <name>таежный поход</name>
+    <distance>55.0</distance>
+    <difficulty>сложный</difficulty>
+  </route>
+</routes>

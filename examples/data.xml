@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes>
+  <route>
+    <name>Горный поход</name>
+    <distance>42.5</distance>
+    <difficulty>сложный</difficulty>
+  </route>
+  <route>
+    <name>Прогулка по лесу</name>
+    <distance>8.2</distance>
+    <difficulty>легкий</difficulty>
+  </route>
+  <route>
+    <name>Водный маршрут</name>
+    <distance>25.0</distance>
+    <difficulty>средний</difficulty>
+  </route>
+</routes>
