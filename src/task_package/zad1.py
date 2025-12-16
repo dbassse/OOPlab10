@@ -6,7 +6,6 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 
 @dataclass(frozen=True)
@@ -22,8 +21,8 @@ class Route:
 class RouteContainer:
     """Контейнер для управления коллекцией маршрутов."""
 
-    routes: List[Route] = field(default_factory=list)
-    _current_file: Optional[str] = field(default=None, init=False)
+    routes: list[Route] = field(default_factory=list)
+    _current_file: str | None = field(default=None, init=False)
 
     def add_route(self, name: str, distance: float, difficulty: str) -> None:
         """Добавляет новый маршрут в коллекцию."""
@@ -40,7 +39,7 @@ class RouteContainer:
         # Сортируем маршруты по названию
         sorted_routes = sorted(self.routes, key=lambda route: route.name)
 
-        table: List[str] = []
+        table = []
         # Шапка таблицы
         header_line = "+{}+{}+{}+{}+".format("-" * 4, "-" * 30, "-" * 12, "-" * 10)
         table.append(header_line)
@@ -62,9 +61,9 @@ class RouteContainer:
         table.append(header_line)
         return "\n".join(table)
 
-    def select_by_distance(self, min_distance: float) -> List[Route]:
+    def select_by_distance(self, min_distance: float) -> list[Route]:
         """Выбирает маршруты длиннее заданного расстояния."""
-        result: List[Route] = []
+        result = []
         for route in self.routes:
             if route.distance > min_distance:
                 result.append(route)
@@ -114,7 +113,7 @@ class RouteContainer:
         except Exception as e:
             raise Exception(f"Ошибка при загрузке файла: {e}")
 
-    def save_to_xml(self, filename: Optional[str] = None) -> str:
+    def save_to_xml(self, filename: str | None = None) -> str:
         """Сохраняет маршруты в XML файл и возвращает имя сохраненного файла."""
         if not self.routes:
             raise ValueError("Нет маршрутов для сохранения.")
@@ -189,14 +188,7 @@ def build_cli_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Система управления туристическими маршрутами",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Примеры использования:
-  %(prog)s add --name "Горный поход на Эльбрус" --distance 42.5 --difficulty сложный --save
-  %(prog)s list
-  %(prog)s select --min-distance 20
-  %(prog)s load маршруты.xml
-  %(prog)s save маршруты.xml
-        """,
+        epilog="""\nПримеры использования:\n  %(prog)s add --name "Горный поход на Эльбрус" --distance 42.5 --difficulty сложный --save\n  %(prog)s list\n  %(prog)s select --min-distance 20\n  %(prog)s load маршруты.xml\n  %(prog)s save маршруты.xml\n""",
     )
 
     subparsers = parser.add_subparsers(
