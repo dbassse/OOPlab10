@@ -5,7 +5,6 @@ import json
 import os
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 
 import click
 
@@ -23,7 +22,7 @@ class Route:
 class RouteContainer:
     """Контейнер для управления коллекцией маршрутов."""
 
-    routes: List[Route] = field(default_factory=list)
+    routes: list[Route] = field(default_factory=list)
     _filename: str = field(default="routes.xml", init=False)
 
     def add_route(
@@ -51,7 +50,7 @@ class RouteContainer:
         # Сортируем маршруты по названию
         sorted_routes = sorted(self.routes, key=lambda route: route.name)
 
-        table: List[str] = []
+        table = []
         # Шапка таблицы
         header_line = "+{}+{}+{}+{}+".format("-" * 4, "-" * 30, "-" * 12, "-" * 10)
         table.append(header_line)
@@ -73,9 +72,9 @@ class RouteContainer:
         table.append(header_line)
         return "\n".join(table)
 
-    def select_by_distance(self, min_distance: float) -> List[Route]:
+    def select_by_distance(self, min_distance: float) -> list[Route]:
         """Выбирает маршруты длиннее заданного расстояния."""
-        result: List[Route] = []
+        result = []
         for route in self.routes:
             if route.distance > min_distance:
                 result.append(route)
@@ -176,7 +175,7 @@ class RouteContainer:
 
         try:
             # Преобразуем датаклассы в словари
-            routes_data: List[Dict[str, Any]] = []
+            routes_data = []
             for route in self.routes:
                 routes_data.append(
                     {
@@ -262,14 +261,14 @@ class RouteContainer:
         """Возвращает общее расстояние всех маршрутов."""
         return sum(route.distance for route in self.routes)
 
-    def get_difficulty_stats(self) -> Dict[str, int]:
+    def get_difficulty_stats(self) -> dict[str, int]:
         """Возвращает статистику по сложности маршрутов."""
-        stats: Dict[str, int] = {}
+        stats = {}
         for route in self.routes:
             stats[route.difficulty] = stats.get(route.difficulty, 0) + 1
         return stats
 
-    def search_by_name(self, name: str, exact: bool = False) -> List[Route]:
+    def search_by_name(self, name: str, exact: bool = False) -> list[Route]:
         """Ищет маршруты по названию."""
         if exact:
             return [r for r in self.routes if r.name.lower() == name.lower()]
@@ -405,7 +404,7 @@ def select(min_distance: float) -> None:
 @cli.command()
 @click.argument("filename", type=click.Path(), required=False)
 @click.pass_context
-def load(ctx: click.Context, filename: Optional[str]) -> None:
+def load(ctx: click.Context, filename: str | None) -> None:
     """Загрузить маршруты из XML файла."""
     if not filename:
         filename = ctx.obj["data_file"]
@@ -424,7 +423,7 @@ def load(ctx: click.Context, filename: Optional[str]) -> None:
 @cli.command()
 @click.argument("filename", type=click.Path(), required=False)
 @click.pass_context
-def save(ctx: click.Context, filename: Optional[str]) -> None:
+def save(ctx: click.Context, filename: str | None) -> None:
     """Сохранить маршруты в XML файл."""
     if not filename:
         filename = ctx.obj["data_file"]
@@ -458,7 +457,7 @@ def convert(xml_file: str, json_file: str) -> None:
 @cli.command()
 @click.argument("name", required=False)
 @click.option("--exact", is_flag=True, help="Точное совпадение названия")
-def search(name: Optional[str], exact: bool) -> None:
+def search(name: str | None, exact: bool) -> None:
     """Поиск маршрутов по названию."""
     if not container.routes:
         click.echo("Нет сохраненных маршрутов.")
